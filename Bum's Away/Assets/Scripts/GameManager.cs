@@ -25,18 +25,15 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public int AvailableLives = 3;
-
-    public int Lives { get; set; }
+        public int Lives { get; set; }
 
     public bool IsGameStarted { get; set; }
-
-    public bool paused = false;
+        public bool paused = false;
 
 //    public static event Action<int> OnLifeLost;
     public static event Action<int> OnLifeGained;
 
-    public GameObject background;
-
+//    public GameObject background;
     public GameObject gameOver;
 
     private int endScore = 0;
@@ -61,16 +58,11 @@ public class GameManager : MonoBehaviour
         }
 
         this.Lives = AvailableLives;
-//        Ball.OnBallDeath += OnBallDeath;
-//        Brick.OnBrickDistruction += OnBrickDestruction;
+//        Ball.OnPoohHit += OnPoohHit;
 
-        // Set background and walls sizes
-//        trans = background.transform;
-//        childTrans = trans.Find("Graphics");
-//        obj = childTrans.gameObject;
-//        Utilities.ResizeSpriteToFullScreen(obj);
 
- //       AdManager.Instance.RequestBanner(GoogleMobileAds.Api.AdPosition.Top);
+
+//       AdManager.Instance.RequestBanner(GoogleMobileAds.Api.AdPosition.Top);
 
 //        AdManager.Instance.RequestRewarded();
 

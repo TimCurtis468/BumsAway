@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Pooh
+  - Target
   layers:
   - Default
   - TransparentFX
@@ -61,4 +63,7 @@ TagManager:
     locked: 0
   - name: clouds2
     uniqueID: 470797881
+    locked: 0
+  - name: Score-lives
+    uniqueID: 415437403
     locked: 0

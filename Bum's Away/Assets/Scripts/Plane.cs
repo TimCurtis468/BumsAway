@@ -5,8 +5,8 @@ using UnityEngine;
 public class Plane : MonoBehaviour
 {
     public Animator animator;
-
     public float speed;
+
     private bool isMovingLeft = true;
 
     private float screenEdgeOffset = 0.15f;
@@ -23,7 +23,7 @@ public class Plane : MonoBehaviour
     private float mouseTimer;
 
     private float MAX_SPEED = 0.075f;
-    private float MIN_SPEED = 0.01f;
+    private float MIN_SPEED = 0.025f;
 
     // Start is called before the first frame update
     void Start()
@@ -47,31 +47,9 @@ public class Plane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float planePositionX = transform.position.x;
-
+ 
         ProcessPlaneSpeed();
-
-        /* Check if plane has reached edge of screen and turn it around if it has */
-        if (isMovingLeft == true)
-        {
-            planePositionX -= speed;
-            if(planePositionX <= leftClamp)
-            {
-                isMovingLeft = false;
-                animator.SetBool("IsMovingLeft", false);
-            }
-        }
-        else
-        {
-            planePositionX += speed;
-            if (planePositionX >= rightClamp)
-            {
-                isMovingLeft = true;
-                animator.SetBool("IsMovingLeft", true);
-            }
-        }
-
-        transform.position = new Vector3(planePositionX, planeInitialY, 0);
+        CheckForEdgeOfScreen();
     }
 
 
@@ -97,6 +75,9 @@ public class Plane : MonoBehaviour
         /* Check if mouse button is up */
         else if (Input.GetMouseButtonUp(0) == true)
         {
+            /* Check to see if pooh should be dropped */
+            CheckForPoohDrop();
+
             /* Clear mouse button latch */
             mouseButtonLatch = false;
         }
@@ -126,6 +107,49 @@ public class Plane : MonoBehaviour
             {
                 speed = MIN_SPEED;
             }
+        }
+    }
+
+    private void CheckForEdgeOfScreen()
+    {
+        float planePositionX = transform.position.x;
+
+        /* Check if plane has reached edge of screen and turn it around if it has */
+        if (isMovingLeft == true)
+        {
+            planePositionX -= speed;
+            if (planePositionX <= leftClamp)
+            {
+                isMovingLeft = false;
+                animator.SetBool("IsMovingLeft", false);
+            }
+        }
+        else
+        {
+            planePositionX += speed;
+            if (planePositionX >= rightClamp)
+            {
+                isMovingLeft = true;
+                animator.SetBool("IsMovingLeft", true);
+            }
+        }
+
+        transform.position = new Vector3(planePositionX, planeInitialY, 0);
+    }
+
+    private void CheckForPoohDrop()
+    {
+        float poohSpeed = speed * -5000.0f;
+        if ((mouseButtonLatch == true) &&
+            (mouseTimer < 1.0f))
+        {
+            Vector3 pos = new Vector3(this.transform.position.x, this.transform.position.y);
+            /* Pooh drop - create a pooh */
+            if (isMovingLeft == false)
+            {
+                poohSpeed = -poohSpeed;
+            }
+            PoohManager.Instance.SpawnPooh(pos, poohSpeed);
         }
     }
 }
