@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         GameManager.OnLifeGained += OnLifeGained;
-        GameManager.OnLifeLost += OnLifeLost;
+//        GameManager.OnLifeLost += OnLifeLost;
         // add OnTarget Hit subscriptions and call back functions
 
         UpdateScoreText(0);
@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnLifeLost -= OnLifeLost;
+//        GameManager.OnLifeLost -= OnLifeLost;
         GameManager.OnLifeGained -= OnLifeGained;
 
     }

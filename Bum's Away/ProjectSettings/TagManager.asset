@@ -41,3 +41,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: sky
+    uniqueID: 2151977785
+    locked: 0
+  - name: background
+    uniqueID: 3389897397
+    locked: 0
+  - name: clouds1
+    uniqueID: 3665849165
+    locked: 0
+  - name: plane
+    uniqueID: 61252823
+    locked: 0
+  - name: pooh
+    uniqueID: 3485588975
+    locked: 0
+  - name: targets
+    uniqueID: 3775449541
+    locked: 0
+  - name: clouds2
+    uniqueID: 470797881
+    locked: 0

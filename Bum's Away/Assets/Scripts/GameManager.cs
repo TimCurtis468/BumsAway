@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     public bool paused = false;
 
-    public static event Action<int> OnLifeLost;
+//    public static event Action<int> OnLifeLost;
     public static event Action<int> OnLifeGained;
 
     public GameObject background;
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     private int endScore = 0;
 
     private int level = 1;
-    private int nextAd = 2;
+////    private int nextAd = 2;
 
     private int numResurrections = 0;
 
@@ -51,9 +51,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject obj;
-        Transform trans;
-        Transform childTrans;
+ //       GameObject obj;
+ //       Transform trans;
+ //       Transform childTrans;
 
         if (gameOver != null)
         {
@@ -65,10 +65,10 @@ public class GameManager : MonoBehaviour
 //        Brick.OnBrickDistruction += OnBrickDestruction;
 
         // Set background and walls sizes
-        trans = background.transform;
-        childTrans = trans.Find("Graphics");
-        obj = childTrans.gameObject;
-        Utilities.ResizeSpriteToFullScreen(obj);
+//        trans = background.transform;
+//        childTrans = trans.Find("Graphics");
+//        obj = childTrans.gameObject;
+//        Utilities.ResizeSpriteToFullScreen(obj);
 
  //       AdManager.Instance.RequestBanner(GoogleMobileAds.Api.AdPosition.Top);
 
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         paused = false;
 
         level = 1;
-        nextAd = 4;
+//        nextAd = 4;
         numResurrections = 0;
         buffActive = false;
 
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         this.Lives = AvailableLives;
         level = 1;
-        nextAd = 4;
+//        nextAd = 4;
     }
 
     public void AddLife()
