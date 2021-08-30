@@ -44,13 +44,10 @@ public class GameManager : MonoBehaviour
     private int level = 1;
 ////    private int nextAd = 2;
 
-    private int numResurrections = 0;
+//    private int numResurrections = 0;
 
     private void Start()
     {
-        GameObject obj;
- //       Transform trans;
- //       Transform childTrans;
 
         if (gameOver != null)
         {
@@ -67,7 +64,7 @@ public class GameManager : MonoBehaviour
 
         level = 1;
 //        nextAd = 4;
-        numResurrections = 0;
+//        numResurrections = 0;
         buffActive = false;
         gameOverActive = false;
 

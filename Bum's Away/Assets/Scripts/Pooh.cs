@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Pooh : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class Pooh : MonoBehaviour
     private SpriteRenderer sr;  // For splatter particle effect
     private Rigidbody2D rb;  // For splatter particle effect
 
-    public static event Action<Pooh> OnPoohHit;
+    public ParticleSystem DestroyEffect;
+
+    public static event Action<Pooh> OnPoohDeath;
 
     private void Awake()
     {
@@ -33,6 +36,12 @@ public class Pooh : MonoBehaviour
             case "Target":
                 // Increase Target poohiness
                 break;
+            case "Ground":
+                // Hit the ground and explode
+                OnPoohDeath?.Invoke(this);
+                SpawnDestroyEffect();
+                Destroy(this.gameObject, 0.1f);
+                break;
             default:
                 break;
         }
@@ -42,5 +51,14 @@ public class Pooh : MonoBehaviour
         // Destroy this pooh
     }
 
+    private void SpawnDestroyEffect()
+    {
+        Vector3 poohPos = gameObject.transform.position;
+        Vector3 spawnPosition = new Vector3(poohPos.x, poohPos.y, poohPos.z - 0.2f);
+        GameObject effect = Instantiate(DestroyEffect.gameObject, spawnPosition, Quaternion.identity);
 
+        MainModule mm = effect.GetComponent<ParticleSystem>().main;
+        mm.startColor = this.sr.color;
+        Destroy(effect, DestroyEffect.main.startLifetime.constant);
+    }
 }
