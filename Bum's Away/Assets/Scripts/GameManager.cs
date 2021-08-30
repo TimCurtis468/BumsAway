@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
 
 //    public GameObject background;
     public GameObject gameOver;
+    public bool buffActive = false;
+    public bool gameOverActive = false;
+
 
     private int endScore = 0;
 
@@ -42,9 +45,6 @@ public class GameManager : MonoBehaviour
 ////    private int nextAd = 2;
 
     private int numResurrections = 0;
-
-    public bool buffActive = false;
-    public bool gameOverActive = false;
 
     private void Start()
     {
@@ -69,8 +69,9 @@ public class GameManager : MonoBehaviour
 //        nextAd = 4;
         numResurrections = 0;
         buffActive = false;
-
         gameOverActive = false;
+
+        Utilities.ResizeSprite(this.gameObject);
     }
 
     public void Update()

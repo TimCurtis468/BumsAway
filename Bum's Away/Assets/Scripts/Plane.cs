@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Plane : MonoBehaviour
 {
     public Animator animator;
     public float speed;
+
+    public Text debugText;
 
     private bool isMovingLeft = true;
 
@@ -24,6 +27,7 @@ public class Plane : MonoBehaviour
 
     private float MAX_SPEED = 0.075f;
     private float MIN_SPEED = 0.025f;
+    private float DELTA_TIME_BASE = 0.0035f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +46,7 @@ public class Plane : MonoBehaviour
         isActive = true;
 
         mouseButtonLatch = false;
+        debugText.text = "(width,height) = (" + Screen.width + "," + Screen.height + ")";
     }
 
     // Update is called once per frame
@@ -50,6 +55,7 @@ public class Plane : MonoBehaviour
  
         ProcessPlaneSpeed();
         CheckForEdgeOfScreen();
+        debugText.text = "planePositionX: " + transform.position.x + "\r\ntimeDelta: " + Time.deltaTime;
     }
 
 
@@ -117,7 +123,7 @@ public class Plane : MonoBehaviour
         /* Check if plane has reached edge of screen and turn it around if it has */
         if (isMovingLeft == true)
         {
-            planePositionX -= speed;
+            planePositionX -= speed * (Time.deltaTime/ DELTA_TIME_BASE);
             if (planePositionX <= leftClamp)
             {
                 isMovingLeft = false;
@@ -126,7 +132,7 @@ public class Plane : MonoBehaviour
         }
         else
         {
-            planePositionX += speed;
+            planePositionX += speed * (Time.deltaTime / DELTA_TIME_BASE);
             if (planePositionX >= rightClamp)
             {
                 isMovingLeft = true;
