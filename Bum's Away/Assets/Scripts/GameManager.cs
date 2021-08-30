@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
- //       GameObject obj;
+        GameObject obj;
  //       Transform trans;
  //       Transform childTrans;
 
@@ -58,13 +58,10 @@ public class GameManager : MonoBehaviour
         }
 
         this.Lives = AvailableLives;
-//        Ball.OnPoohHit += OnPoohHit;
+        //        Ball.OnPoohHit += OnPoohHit;
 
-
-
-//       AdManager.Instance.RequestBanner(GoogleMobileAds.Api.AdPosition.Top);
-
-//        AdManager.Instance.RequestRewarded();
+        //       AdManager.Instance.RequestBanner(GoogleMobileAds.Api.AdPosition.Top);
+        //        AdManager.Instance.RequestRewarded();
 
         paused = false;
 

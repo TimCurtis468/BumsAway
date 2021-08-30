@@ -12,6 +12,12 @@ public class Utilities : MonoBehaviour
     private float widthFactor;
     private float heightFactor;
 
+    private float SCREEN_WIDTH = 2160.0f;
+    private float SCREEN_HEIGHT = 1080.0f;
+
+    private static float sSCREEN_WIDTH = 2160.0f;
+    private static float sSCREEN_HEIGHT = 1080.0f;
+
     private void Awake()
     {
         if (_instance != null)
@@ -22,8 +28,8 @@ public class Utilities : MonoBehaviour
         {
             _instance = this;
 
-            widthFactor = Screen.width / 1080.0f;
-            heightFactor = Screen.height / 1920.0f;
+            widthFactor = Screen.width / SCREEN_HEIGHT;
+            heightFactor = Screen.height / SCREEN_WIDTH;
 
         }
     }
@@ -35,7 +41,7 @@ public class Utilities : MonoBehaviour
         float worldSpaceWidth = topRightCorner.x * 2f;
         float worldSpaceHeight = topRightCorner.y * 2f;
 
-        // width and scale relavtive to 1080 x 1920 
+        // width and scale relavtive to SCREEN_WIDTH + SCREEN_HEIGHT
         float worldWidthScale = worldSpaceWidth / 5.625f;
         float worldHeightScale = worldSpaceHeight / 10.0f;
         var spriteSize = gameObject.transform.localScale;
@@ -51,7 +57,7 @@ public class Utilities : MonoBehaviour
         float worldSpaceWidth = topRightCorner.x * 2f;
         float worldSpaceHeight = topRightCorner.y * 2f;
 
-        // width and scale relavtive to 1080 x 1920 
+        // width and scale relavtive to SCREEN_WIDTH + SCREEN_HEIGHT
         float worldWidthScale = worldSpaceWidth / 5.625f;
         float worldHeightScale = worldSpaceHeight / 10.0f;
         var spriteSize = gameObject.transform.localScale;
@@ -72,7 +78,7 @@ public class Utilities : MonoBehaviour
         var topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         float worldSpaceWidth = topRightCorner.x * 2f;
 
-        // width and scale relavtive to 1080 x 1920 
+        // width and scale relavtive to  SCREEN_WIDTH + SCREEN_HEIGHT
         float worldWidthScale = worldSpaceWidth / 5.625f;
         x = x * worldWidthScale;
 
@@ -84,7 +90,7 @@ public class Utilities : MonoBehaviour
         var topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         float worldSpaceHeight = topRightCorner.y * 2f;
 
-        // width and scale relavtive to 1080 x 1920 
+        // width and scale relavtive to  SCREEN_WIDTH + SCREEN_HEIGHT
         float worldHeightScale = worldSpaceHeight / 10.0f;
         y = y * worldHeightScale;
 
@@ -93,31 +99,31 @@ public class Utilities : MonoBehaviour
 
     static public void ResizeAndPositionUI(GameObject gameObject)
     {
-        //#if (PI)
+        #if (PI)
         var topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         float worldSpaceWidth = topRightCorner.x * 2f;
         float worldSpaceHeight = topRightCorner.y * 2f;
 
-        float worldWidthScale = worldSpaceWidth / 5.625f;
-        float worldHeightScale = worldSpaceHeight / 10.0f;
+        float worldWidthScale = worldSpaceWidth / 20;
+        float worldHeightScale = worldSpaceHeight / 10;
         var spriteSize = gameObject.GetComponent<RectTransform>().rect;
 
-        float scaleFactorX = worldWidthScale * spriteSize.x;
-        float scaleFactorY = worldHeightScale * spriteSize.y;
+        float scaleFactorX = worldWidthScale * gameObject.transform.localScale.x;
+        float scaleFactorY =  worldHeightScale * gameObject.transform.localScale.y;
         gameObject.transform.localScale = new Vector3(scaleFactorX, scaleFactorY, 1);
 
         var spriteLocation = gameObject.transform.localPosition;
         float posFactorX = worldWidthScale * spriteLocation.x;
         float posFactorY = worldHeightScale * spriteLocation.y;
         gameObject.transform.localPosition = new Vector3(posFactorX, posFactorY, 1);
-        //#endif
+        #endif
 
-#if (PI)
+//#if (PI)
         float objectWidth;
         float objectHeight;
         RectTransform rt;
-        float widthFactor = Screen.width / 1920.0f;
-        float heightFactor = Screen.height / 1080.0f;
+        float widthFactor = Screen.width / sSCREEN_WIDTH;
+        float heightFactor = Screen.height / sSCREEN_HEIGHT;
 
 
         rt = gameObject.GetComponent<RectTransform>();
@@ -129,13 +135,13 @@ public class Utilities : MonoBehaviour
 
         rt.sizeDelta = new Vector2(objectWidth, objectHeight);
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x * widthFactor, rt.anchoredPosition.y * heightFactor);
-#endif
+//#endif
     }
 
     static public void ResizeText(GameObject gameObject)
     {
         Text t = gameObject.GetComponent<Text>();
-        t.fontSize = (t.fontSize * Screen.width) / 1920;
+        t.fontSize = (t.fontSize * Screen.width) / (int)sSCREEN_HEIGHT;
     }
 
     static public void ResizeSpriteToFullScreen(GameObject gameObject)
@@ -144,8 +150,8 @@ public class Utilities : MonoBehaviour
         var worldSpaceWidth = topRightCorner.x * 2;
         var worldSpaceHeight = topRightCorner.y * 2;
         var spriteSize = gameObject.GetComponent<SpriteRenderer>().bounds.size;
-        var scaleFactorX = worldSpaceWidth / spriteSize.x;
-        var scaleFactorY = worldSpaceHeight / spriteSize.y;
+        var scaleFactorX = (gameObject.transform.localScale.x * worldSpaceWidth) / spriteSize.x;
+        var scaleFactorY = (gameObject.transform.localScale.y * worldSpaceHeight) / spriteSize.y;
 
         gameObject.transform.localScale = new Vector3(scaleFactorX, scaleFactorY, 1);
     }
