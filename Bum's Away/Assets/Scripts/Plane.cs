@@ -8,8 +8,6 @@ public class Plane : MonoBehaviour
     public Animator animator;
     public float speed;
 
-    public Text debugText;
-
     private bool isMovingLeft = true;
 
     private float screenEdgeOffset = 0.15f;
@@ -46,7 +44,6 @@ public class Plane : MonoBehaviour
         isActive = true;
 
         mouseButtonLatch = false;
-        debugText.text = "(width,height) = (" + Screen.width + "," + Screen.height + ")";
     }
 
     // Update is called once per frame
@@ -55,7 +52,6 @@ public class Plane : MonoBehaviour
  
         ProcessPlaneSpeed();
         CheckForEdgeOfScreen();
-        debugText.text = "planePositionX: " + transform.position.x + "\r\ntimeDelta: " + Time.deltaTime;
     }
 
 
@@ -87,6 +83,12 @@ public class Plane : MonoBehaviour
             /* Clear mouse button latch */
             mouseButtonLatch = false;
         }
+        if (Input.GetMouseButton(0) == false)
+        {
+            /* Clear mouse button latch if button is up */
+            mouseButtonLatch = false;
+        }
+
 
         /* Is the mouse button down? */
         if (mouseButtonLatch == true)
