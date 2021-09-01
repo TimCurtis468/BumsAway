@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Target : MonoBehaviour
+public abstract class Target : MonoBehaviour
 {
-    public Animator animator;
+    protected bool isMovingLeft = true;
+
     public float speed;
 
-    private bool isMovingLeft = true;
+    //    private bool isMovingLeft = true;
 
     private float screenEdgeOffset = 0.15f;
     private float leftClamp = 0;
@@ -18,15 +19,22 @@ public class Target : MonoBehaviour
 
     public bool isActive;
 
-    private float WALKING_SPEED = 0.01f;
-    private float RUNNING_SPEED = 0.025f;
-    private float DELTA_TIME_BASE = 0.0035f;
+    public Animator animatorTarget;
 
-    // Start is called before the first frame update
-    void Start()
+    public float WALKING_SPEED = 0.01f;
+    public float RUNNING_SPEED = 0.025f;
+    public float DELTA_TIME_BASE = 0.0035f;
+    public float POOH_HOLDOFF_TIME = 1.0f;
+    public int MAX_POOHINESS = 2;
+
+    public bool poohHitActive = false;
+    public float poohTimer = 0.0f;
+
+    public void TargetInit(Animator anim)
     {
-        animator.SetBool("IsMovingLeft", true);
-        animator.SetInteger("Poohiness", 0);
+        animatorTarget = anim;
+        animatorTarget.SetBool("IsMovingLeft", true);
+        animatorTarget.SetInteger("Poohiness", 0);
         speed = WALKING_SPEED;
         isMovingLeft = true;
         screenEdgeOffset = Utilities.ResizeXValue(screenEdgeOffset);
@@ -37,23 +45,10 @@ public class Target : MonoBehaviour
         SetClamps();
 
         isActive = true;
+        poohHitActive = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        MoveTarget();
-    }
-
-    private void SetClamps()
-    {
-        float objectWidth = sr.bounds.extents.x;
-
-        leftClamp = -topRightCorner.x + objectWidth;
-        rightClamp = topRightCorner.x - objectWidth;
-    }
-
-    private void MoveTarget()
+    public void MoveTarget()
     {
         float targetPositionX = transform.position.x;
 
@@ -64,7 +59,7 @@ public class Target : MonoBehaviour
             if (targetPositionX <= leftClamp)
             {
                 isMovingLeft = false;
-                animator.SetBool("IsMovingLeft", false);
+                animatorTarget.SetBool("IsMovingLeft", false);
             }
         }
         else
@@ -73,10 +68,58 @@ public class Target : MonoBehaviour
             if (targetPositionX >= rightClamp)
             {
                 isMovingLeft = true;
-                animator.SetBool("IsMovingLeft", true);
+                animatorTarget.SetBool("IsMovingLeft", true);
             }
         }
 
         transform.position = new Vector3(targetPositionX, targetInitialY, 0);
+
+        CheckForPoohHoldoff();
     }
+
+    private void CheckForPoohHoldoff()
+    {
+        // Hold off a pooh hit for 1 second to stop double trigger
+        if (poohHitActive == true)
+        {
+            poohTimer += Time.deltaTime;
+            if (poohTimer > POOH_HOLDOFF_TIME)
+            {
+                poohHitActive = false;
+            }
+        }
+    }
+
+    private void SetClamps()
+    {
+        float objectWidth = sr.bounds.extents.x;
+
+        leftClamp = -topRightCorner.x + objectWidth;
+        rightClamp = topRightCorner.x - objectWidth;
+    }
+#if (PI)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Pooh")
+        {
+            if (poohHitActive == false)
+            {
+                int poohiness = animator.GetInteger("Poohiness");
+                poohiness++;
+                if (poohiness > MAX_POOHINESS)
+                {
+                    poohiness = MAX_POOHINESS;
+                }
+                animator.SetInteger("Poohiness", poohiness);
+                if (poohiness == 2)
+                {
+                    speed = RUNNING_SPEED;
+                }
+                // Start pooh holdoff timer to stop double trigger
+                poohHitActive = true;
+                poohTimer = 0.0f;
+            }
+        }
+    }
+#endif
 }
