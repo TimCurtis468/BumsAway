@@ -34,25 +34,8 @@ public class Pooh : MonoBehaviour
         switch (coll.gameObject.tag)
         {
             case "Target":
-                Target pm = coll.gameObject.GetComponent<Target>();
-                // Increase Target poohiness
-                if (pm.poohHitActive == false)
-                {
-                    int poohiness = pm.animatorTarget.GetInteger("Poohiness");
-                    poohiness++;
-                    if (poohiness > pm.MAX_POOHINESS)
-                    {
-                        poohiness = pm.MAX_POOHINESS;
-                    }
-                    pm.animatorTarget.SetInteger("Poohiness", poohiness);
-                    if (poohiness == 2)
-                    {
-                        pm.speed = pm.RUNNING_SPEED;
-                    }
-                    // Start pooh holdoff timer to stop double trigger
-                    pm.poohHitActive = true;
-                    pm.poohTimer = 0.0f;
-                }
+                Target target = coll.gameObject.GetComponent<Target>();
+                target.TargetHit();
                 break;
             case "Ground":
                 // Hit the ground and explode

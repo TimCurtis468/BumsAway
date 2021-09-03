@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
         gameOverActive = false;
 
         Utilities.ResizeSprite(this.gameObject);
+        TargetManager.Instance.CreateTarget();
+        TargetManager.Instance.CreateTarget();
+        TargetManager.Instance.CreateTarget();
     }
 
     public void Update()

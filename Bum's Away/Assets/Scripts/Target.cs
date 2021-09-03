@@ -21,6 +21,7 @@ public abstract class Target : MonoBehaviour
 
     public Animator animatorTarget;
 
+    public float RANDOM_SPEED_RANGE = 0.005f;
     public float WALKING_SPEED = 0.01f;
     public float RUNNING_SPEED = 0.025f;
     public float DELTA_TIME_BASE = 0.0035f;
@@ -32,13 +33,27 @@ public abstract class Target : MonoBehaviour
 
     public void TargetInit(Animator anim)
     {
+        float targetInitialX;
+        float rand; 
         animatorTarget = anim;
         animatorTarget.SetBool("IsMovingLeft", true);
         animatorTarget.SetInteger("Poohiness", 0);
-        speed = WALKING_SPEED;
         isMovingLeft = true;
         screenEdgeOffset = Utilities.ResizeXValue(screenEdgeOffset);
+
+        /* Set initial position to random X location */
         targetInitialY = transform.position.y;
+        targetInitialX = transform.position.x;
+        rand = UnityEngine.Random.Range(0, targetInitialX);
+        targetInitialX -= rand * 2;
+        transform.position = new Vector3(targetInitialX, targetInitialY, transform.position.z);
+
+        /* Set random speed */
+        speed = UnityEngine.Random.Range(WALKING_SPEED - 0.003f, WALKING_SPEED);
+
+        /* Set random animation speed */
+        animatorTarget.speed = 0.7f + UnityEngine.Random.Range(0.0f, 0.6f);
+
         sr = GetComponent<SpriteRenderer>();
 
         topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
@@ -52,7 +67,7 @@ public abstract class Target : MonoBehaviour
     {
         float targetPositionX = transform.position.x;
 
-        /* Check if plane has reached edge of screen and turn it around if it has */
+        /* Check if target has reached edge of screen and turn it around if it has */
         if (isMovingLeft == true)
         {
             targetPositionX -= speed * (Time.deltaTime / DELTA_TIME_BASE);
@@ -75,6 +90,28 @@ public abstract class Target : MonoBehaviour
         transform.position = new Vector3(targetPositionX, targetInitialY, 0);
 
         CheckForPoohHoldoff();
+    }
+
+    public void TargetHit()
+    {
+        // Increase Target poohiness
+        if (poohHitActive == false)
+        {
+            int poohiness = animatorTarget.GetInteger("Poohiness");
+            poohiness++;
+            if (poohiness > MAX_POOHINESS)
+            {
+                poohiness = MAX_POOHINESS;
+            }
+            animatorTarget.SetInteger("Poohiness", poohiness);
+            if (poohiness == 2)
+            {
+                speed = UnityEngine.Random.Range(RUNNING_SPEED - 0.003f, RUNNING_SPEED);
+            }
+            // Start pooh holdoff timer to stop double trigger
+            poohHitActive = true;
+            poohTimer = 0.0f;
+        }
     }
 
     private void CheckForPoohHoldoff()
