@@ -72,6 +72,8 @@ public class GameManager : MonoBehaviour
         TargetManager.Instance.CreateTarget();
         TargetManager.Instance.CreateTarget();
         TargetManager.Instance.CreateTarget();
+
+        CloudManager.Instance.CreateStartClouds();
     }
 
     public void Update()

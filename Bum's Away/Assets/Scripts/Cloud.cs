@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,31 +6,29 @@ using UnityEngine;
 public class Cloud : MonoBehaviour
 {
     public Sprite[] lightClouds;
-    public Sprite[] darkClouds;
+
+    public int MAX_CLOUD_NUM = 12;
+
+    public static event Action<Cloud> OnCloudDeath;
+
 
     private SpriteRenderer sr;
     private bool isMovingLeft = false;
     private float cloudSpeed;
 
     private float cloudInitialY;
-    private float cloudInitialX;
+    private float cloudInitialX = 11.05f;
+    private float cloudOffScreenX = 11.5f;
 
     private float DEFAULT_CLOUD_SPEED = 0.001f;
     private float DELTA_TIME_BASE = 0.0035f;
+
+    private int cloudNum = 0;
 
     // Start is called before the first frame update
     public void Start()
     {
         sr = this.gameObject.GetComponent<SpriteRenderer>();
-        cloudInitialX = transform.position.x;
-        MakeCloud();
-
-    }
-
-
-    private void OnCollisionEnter2D(Collision2D coll)
-    {
-        MakeCloud();
     }
 
     // Update is called once per frame
@@ -42,35 +41,48 @@ public class Cloud : MonoBehaviour
         if (isMovingLeft == true)
         {
             cloudPositionX -= cloudSpeed * (Time.deltaTime / DELTA_TIME_BASE);
+            /* Check for cloud going off screen */
+            if(cloudPositionX < -cloudOffScreenX)
+            {
+                /* Cloud gone off screen - delete it */
+                OnCloudDeath?.Invoke(this);
+                Destroy(this.gameObject);
+            }
         }
         else
         {
             cloudPositionX += cloudSpeed * (Time.deltaTime / DELTA_TIME_BASE);
+            /* Check for cloud going off screen */
+            if (cloudPositionX > cloudOffScreenX)
+            {
+                /* Cloud gone off screen - delete it */
+                OnCloudDeath?.Invoke(this);
+                Destroy(this.gameObject);
+            }
+
         }
 
         transform.position = new Vector3(cloudPositionX, cloudInitialY, 0);
     }
 
-    private void MakeCloud()
+    public void MakeCloud(int num)
     {
         float rand = UnityEngine.Random.Range(0.0f, 1.0f);
         int image_num;
         float x;
-        if (rand > 0.1f)
+        cloudNum = num;
+
+        if(sr == null)
         {
-            // Make light cloud
-            image_num = UnityEngine.Random.Range(0, lightClouds.Length);
-            sr.sprite = lightClouds[image_num];
+            sr = this.gameObject.GetComponent<SpriteRenderer>();
         }
-        else
-        {
-            // make dark cloud
-            image_num = UnityEngine.Random.Range(0, darkClouds.Length);
-            sr.sprite = darkClouds[image_num];
-        }
+        // Make cloud
+        image_num = UnityEngine.Random.Range(0, lightClouds.Length);
+        sr.sprite = lightClouds[image_num];
 
         // Set cloud to move left or right 
         cloudSpeed = DEFAULT_CLOUD_SPEED;
+#if (PI)
         rand = UnityEngine.Random.Range(0.0f, 1.0f);
         if (rand > 0.5f)
         {
@@ -79,16 +91,19 @@ public class Cloud : MonoBehaviour
         }
         else
         {
+#endif
             isMovingLeft = true;
-            // Move right moving cloud to opposite side of screen
-            x = cloudInitialX;
+        // Move right moving cloud to opposite side of screen
+        x = cloudInitialX;
+#if (PI)
         }
-        cloudInitialY = UnityEngine.Random.Range(-1.0f, 3.0f);
+#endif
+        cloudInitialY = cloudNum - 3.0f + UnityEngine.Random.Range(-0.5f, 0.5f);
         this.transform.position = new Vector3(x, cloudInitialY, this.transform.position.z);
+        this.sr.sortingLayerName = "clouds1";
 
         // Set speed
-        cloudSpeed += UnityEngine.Random.Range(0.0f, 0.002f);
+        cloudSpeed += (MAX_CLOUD_NUM - cloudNum) * 0.0004f;//UnityEngine.Random.Range(0.0001f, 0.003f);
 
     }
-
 }
