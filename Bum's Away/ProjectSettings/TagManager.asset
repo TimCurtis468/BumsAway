@@ -7,6 +7,9 @@ TagManager:
   - Pooh
   - Target
   - Ground
+  - LeftCollider
+  - RightCollider
+  - Cloud
   layers:
   - Default
   - TransparentFX
@@ -47,11 +50,11 @@ TagManager:
   - name: sky
     uniqueID: 2151977785
     locked: 0
-  - name: background
-    uniqueID: 3389897397
-    locked: 0
   - name: clouds1
     uniqueID: 3665849165
+    locked: 0
+  - name: background
+    uniqueID: 3389897397
     locked: 0
   - name: plane
     uniqueID: 61252823
