@@ -13,12 +13,16 @@ public class Pooh : MonoBehaviour
     public ParticleSystem DestroyEffect;
 
     public static event Action<Pooh> OnPoohDeath;
+    public static event Action<int> OnPoohTargetHit;
+
+    private int poohHitCount = 1;
 
     private void Awake()
     {
         this.sr = GetComponentInChildren<SpriteRenderer>();
         this.rb = GetComponentInChildren<Rigidbody2D>();
         rb.velocity = new Vector2(0, 0);
+        poohHitCount = 1;
     }
 
     public void SetPoohImage(int imageNum)
@@ -34,8 +38,11 @@ public class Pooh : MonoBehaviour
         switch (coll.gameObject.tag)
         {
             case "Target":
+                int poohiness;
                 Target target = coll.gameObject.GetComponent<Target>();
-                target.TargetHit();
+                poohiness = target.TargetHit();
+                OnPoohTargetHit?.Invoke(poohHitCount * poohiness);
+                poohHitCount++;
                 break;
             case "Ground":
                 // Hit the ground and explode

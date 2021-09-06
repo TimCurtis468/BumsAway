@@ -92,12 +92,13 @@ public abstract class Target : MonoBehaviour
         CheckForPoohHoldoff();
     }
 
-    public void TargetHit()
+    public int TargetHit()
     {
+        int poohiness = 0;
         // Increase Target poohiness
         if (poohHitActive == false)
         {
-            int poohiness = animatorTarget.GetInteger("Poohiness");
+            poohiness = animatorTarget.GetInteger("Poohiness");
             poohiness++;
             if (poohiness > MAX_POOHINESS)
             {
@@ -112,6 +113,8 @@ public abstract class Target : MonoBehaviour
             poohHitActive = true;
             poohTimer = 0.0f;
         }
+
+        return poohiness;
     }
 
     private void CheckForPoohHoldoff()

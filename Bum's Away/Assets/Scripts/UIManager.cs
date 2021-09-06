@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
         Transform childTransform;
 
         GameManager.OnLifeGained += OnLifeGained;
+        Pooh.OnPoohTargetHit += UpdateScoreText;
+
         //        GameManager.OnLifeLost += OnLifeLost;
         // add OnTarget Hit subscriptions and call back functions
 
@@ -79,7 +81,7 @@ public class UIManager : MonoBehaviour
         LivesText.text = txt;
     }
 
-    private void UpdateScoreText(int increment)
+    public void UpdateScoreText(int increment)
     {
         this.Score += increment;
         string scoreString = this.Score.ToString().PadLeft(5, '0');
@@ -87,13 +89,11 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.SetScore(Score);
     }
 
-
-
-
     private void OnDisable()
     {
 //        GameManager.OnLifeLost -= OnLifeLost;
         GameManager.OnLifeGained -= OnLifeGained;
+        Pooh.OnPoohTargetHit -= UpdateScoreText;
 
     }
 
