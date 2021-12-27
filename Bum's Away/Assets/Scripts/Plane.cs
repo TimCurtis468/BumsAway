@@ -5,6 +5,25 @@ using UnityEngine.UI;
 
 public class Plane : MonoBehaviour
 {
+
+    #region Singleton
+    private static Plane _instance;
+    public static Plane Instance => _instance;
+
+
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+    #endregion
+
     public Animator animator;
     public float speed;
 
@@ -49,11 +68,30 @@ public class Plane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
- 
         ProcessPlaneSpeed();
         CheckForEdgeOfScreen();
     }
 
+    public float GetPlaneHeight()
+    {
+        return sr.bounds.extents.y;
+    }
+
+    public float GetPlaneWidth()
+    {
+        return sr.bounds.extents.x;
+    }
+
+    public bool IsMovingLeft()
+    {
+        return isMovingLeft;
+    }
+
+    public bool GetMouseButtonInfo(out float timer)
+    {
+        timer = mouseTimer;
+        return mouseButtonLatch;
+    }
 
     private void SetClamps()
     {
